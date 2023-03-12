@@ -1,0 +1,28 @@
+import React, { useEffect, useState } from 'react';
+import { YOUTUBE_VIDEO_API } from '../Utiles/Config';
+import VideoCard from './VideoCard';
+import {Link} from "react-router-dom";
+
+const VideoContainer = () => {
+const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+getVideos();
+  },[videos]);
+  const getVideos = async () => {
+    const data= await fetch (YOUTUBE_VIDEO_API);
+    const json= await data.json();
+    setVideos(json.items);
+  }
+  if (!videos?.length) return null;
+  return (
+    <div 
+    className='flex justify-around flex-wrap'>
+      {videos.map((video) =>{
+        return <Link to={"/watch?v=" + video.id}><VideoCard key={video.id} info={video} /></Link>
+      })}
+    </div>
+  )
+}
+
+export default VideoContainer;
